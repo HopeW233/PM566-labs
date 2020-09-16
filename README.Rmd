@@ -117,18 +117,42 @@ stations <- stations[n == 1,][, n := NULL]
 
 3. Merge the data as we did during the lecture.
 
-## Question 1: Representative station for the US
-
-What is the median station in terms of temperature, wind speed, and atmospheric pressure? Look for the three weather stations that best represent continental US using the `quantile()` function. Do these three coincide?
-
 ```{r merging datasets}
 dat <- merge(
   x=met, y=stations, by.x = "USAFID", by.y = "USAF",
   all.x=TRUE, all.y=FALSE
 )
+# print out a sample of the data
 dat[1:5, .(USAFID, WBAN, STATE)]
 ```
 
+## Question 1: Representative station for the US
+
+What is the median station in terms of temperature, wind speed, and atmospheric pressure? Look for the three weather stations that best represent continental US using the `quantile()` function. Do these three coincide?
+
+```{r Q1}
+met_stations <- dat[, .(
+  temp = mean(temp, na.rm = TRUE), 
+  wind.sp = mean(wind.sp, na.rm = TRUE), 
+  atm.press = mean(atm.press, na.rm = TRUE)
+  ), by = USAFID]
+
+# Computing median
+met_stations[, temp50 := quantile(temp, probs = .5, na.rm = TRUE)]
+met_stations[, atmp50 := quantile(atm.press, probs = .5, na.rm = TRUE)]
+met_stations[, windsp50 := quantile(wind.sp, probs = .5, na.rm = TRUE)]
+
+# Filtering data
+met_stations[which.min(abs(temp - temp50))]
+met_stations[which.min(abs(atm.press - atmp50))]
+met_stations[which.min(abs(wind.sp - windsp50))]
+```
+
+- The median station in terms of temperature, wind speed, and atmospheric pressure is:
+    USAFID: 720458 
+    USAFID: 720929 
+    USAFID: 722238
+- No, these three do not coincide.
 
 Knit the document, commit your changes, and Save it on GitHub. Don't forget to add `README.md` to the tree, the first time you render it.
 

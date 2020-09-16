@@ -141,18 +141,14 @@ stations <- stations[n == 1,][, n := NULL]
 
 3.  Merge the data as we did during the lecture.
 
-## Question 1: Representative station for the US
-
-What is the median station in terms of temperature, wind speed, and
-atmospheric pressure? Look for the three weather stations that best
-represent continental US using the `quantile()` function. Do these three
-coincide?
+<!-- end list -->
 
 ``` r
 dat <- merge(
   x=met, y=stations, by.x = "USAFID", by.y = "USAF",
   all.x=TRUE, all.y=FALSE
 )
+# print out a sample of the data
 dat[1:5, .(USAFID, WBAN, STATE)]
 ```
 
@@ -162,6 +158,51 @@ dat[1:5, .(USAFID, WBAN, STATE)]
     ## 3: 690150 93121    CA
     ## 4: 690150 93121    CA
     ## 5: 690150 93121    CA
+
+## Question 1: Representative station for the US
+
+What is the median station in terms of temperature, wind speed, and
+atmospheric pressure? Look for the three weather stations that best
+represent continental US using the `quantile()` function. Do these three
+coincide?
+
+``` r
+met_stations <- dat[, .(
+  temp = mean(temp, na.rm = TRUE), 
+  wind.sp = mean(wind.sp, na.rm = TRUE), 
+  atm.press = mean(atm.press, na.rm = TRUE)
+  ), by = USAFID]
+
+# Computing median
+met_stations[, temp50 := quantile(temp, probs = .5, na.rm = TRUE)]
+met_stations[, atmp50 := quantile(atm.press, probs = .5, na.rm = TRUE)]
+met_stations[, windsp50 := quantile(wind.sp, probs = .5, na.rm = TRUE)]
+
+# Filtering data
+met_stations[which.min(abs(temp - temp50))]
+```
+
+    ##    USAFID     temp  wind.sp atm.press   temp50   atmp50 windsp50
+    ## 1: 720458 23.68173 1.209682       NaN 23.68406 1014.691 2.461838
+
+``` r
+met_stations[which.min(abs(atm.press - atmp50))]
+```
+
+    ##    USAFID     temp  wind.sp atm.press   temp50   atmp50 windsp50
+    ## 1: 722238 26.13978 1.472656  1014.691 23.68406 1014.691 2.461838
+
+``` r
+met_stations[which.min(abs(wind.sp - windsp50))]
+```
+
+    ##    USAFID     temp  wind.sp atm.press   temp50   atmp50 windsp50
+    ## 1: 720929 17.43278 2.461838       NaN 23.68406 1014.691 2.461838
+
+  - The median station in terms of temperature, wind speed, and
+    atmospheric pressure is: USAFID: 720458 USAFID: 720929 USAFID:
+    722238
+  - No, these three do not coincide.
 
 Knit the document, commit your changes, and Save it on GitHub. Don’t
 forget to add `README.md` to the tree, the first time you render it.
