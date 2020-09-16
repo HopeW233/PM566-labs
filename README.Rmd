@@ -131,11 +131,12 @@ dat[1:5, .(USAFID, WBAN, STATE)]
 What is the median station in terms of temperature, wind speed, and atmospheric pressure? Look for the three weather stations that best represent continental US using the `quantile()` function. Do these three coincide?
 
 ```{r Q1}
+# Obtaining averages per station
 met_stations <- dat[, .(
   temp = mean(temp, na.rm = TRUE), 
   wind.sp = mean(wind.sp, na.rm = TRUE), 
   atm.press = mean(atm.press, na.rm = TRUE)
-  ), by = USAFID]
+  ), by = .(USAFID, STATE)]
 
 # Computing median
 met_stations[, temp50 := quantile(temp, probs = .5, na.rm = TRUE)]
@@ -148,7 +149,7 @@ met_stations[which.min(abs(atm.press - atmp50))]
 met_stations[which.min(abs(wind.sp - windsp50))]
 ```
 
-- The median station in terms of temperature, wind speed, and atmospheric pressure is:
+- The three stations are:
     USAFID: 720458 
     USAFID: 720929 
     USAFID: 722238
@@ -160,8 +161,24 @@ Knit the document, commit your changes, and Save it on GitHub. Don't forget to a
 
 Just like the previous question, you are asked to identify what is the most representative, the median, station per state. This time, instead of looking at one variable at a time, look at the euclidean distance. If multiple stations show in the median, select the one located at the lowest latitude.
 
-```{r}
+```{r Q2}
+# Computing median
+met_stations[, temp50s := quantile(temp, probs = .5, na.rm = TRUE), by=STATE]
+met_stations[, atmp50s := quantile(atm.press, probs = .5, na.rm = TRUE), by=STATE]
+met_stations[, windsp50s := quantile(wind.sp, probs = .5, na.rm = TRUE), by=STATE]
 
+# Temp
+met_stations[, tempdif := which.min(abs(temp - temp50s)), by=STATE]
+met_stations[, recordid := 1:.N, by=STATE]
+met_stations[recordid == tempdif, .(USAFID, temp, temp50s, STATE)]
+
+# ATM press
+met_stations[, atmpdif := which.min(abs(atm.press - atmp50s)), by=STATE]
+met_stations[recordid == atmpdif, .(USAFID, atm.press, atmp50s, STATE)]
+
+# Wind speed
+met_stations[, winddif := which.min(abs(wind.sp - windsp50s)), by=STATE]
+met_stations[recordid == winddif, .(USAFID, wind.sp, windsp50s, STATE)]
 ```
 
 Knit the doc and save it on GitHub.
