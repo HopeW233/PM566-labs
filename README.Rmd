@@ -1,6 +1,8 @@
 ---
 title: "Lab 05 - Data Wrangling"
-output: html_document
+author: "Lin Wang"
+date: "9/16/2020"
+output: github_document
 ---
 
 # Learning goals
@@ -84,9 +86,15 @@ Once you are done setting up the project, you can now start working with the MET
 
 1. Load the `data.table` (and the `dtplyr` and `dplyr` packages if you plan to work with those).
 
+```{r}
+library(data.table)
+download.file("https://raw.githubusercontent.com/USCbiostats/data-science-data/master/02_met/met_all.gz", "met_all.gz", method="libcurl", timeout = 60)
+met <- fread("met_all.gz")
+```
+
 2. Load the met data from https://raw.githubusercontent.com/USCbiostats/data-science-data/master/02_met/met_all.gz, and also the station data. For the later, you can use the code we used during lecture to pre-process the stations data:
 
-```{r stations-data, eval = FALSE}
+```{r stations-data, eval = TRUE, cache=TRUE}
 # Download the data
 stations <- fread("ftp://ftp.ncdc.noaa.gov/pub/data/noaa/isd-history.csv")
 stations[, USAF := as.integer(USAF)]
@@ -113,8 +121,12 @@ stations <- stations[n == 1,][, n := NULL]
 
 What is the median station in terms of temperature, wind speed, and atmospheric pressure? Look for the three weather stations that best represent continental US using the `quantile()` function. Do these three coincide?
 
-```{r}
-
+```{r merging datasets}
+dat <- merge(
+  x=met, y=stations, by.x = "USAFID", by.y = "USAF",
+  all.x=TRUE, all.y=FALSE
+)
+dat[1:5, .(USAFID, WBAN, STATE)]
 ```
 
 
