@@ -228,7 +228,7 @@ dat2[, type := "Center of the temperature"]
 dat3 <- rbind(dat1,dat2)
 
 type.pal <- colorFactor(c('blue', 'purple', 'red'),
-                       domain = as.factor(dat$type))
+                       domain = as.factor(dat3$type))
 
 
 leaflet(dat3) %>%
