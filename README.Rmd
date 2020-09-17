@@ -215,27 +215,26 @@ met_temp <- merge(x = met_temp, y = all_stations, by = "USAFID",
   all.x = TRUE, all.y = FALSE
 )
 
-# This will be evaluated only if you are in interactive mode
-# so it won't be included in the rendered doc
-if (interactive()) {
+
+
 # Combining datasets and Mapping
-  library(leaflet)
-  dat1 <- met_location[, .(lon, lat)]
-  dat1[, type := "Center of the state"]
+library(leaflet)
+dat1 <- met_location[, .(lon, lat)]
+dat1[, type := "Center of the state"]
 
-  dat2 <- met_temp[, .(lon, lat)]
-  dat2[, type := "Center of the temperature"]
+dat2 <- met_temp[, .(lon, lat)]
+dat2[, type := "Center of the temperature"]
 
-  dat3 <- rbind(dat1,dat2)
+dat3 <- rbind(dat1,dat2)
 
-  type.pal <- colorFactor(c('blue', 'purple', 'red'),
+type.pal <- colorFactor(c('blue', 'purple', 'red'),
                        domain = as.factor(dat$type))
 
 
-  leaflet(dat) %>%
-    addProviderTiles("OpenStreetMap") %>%
-    addCircles(lng = ~lon, lat = ~lat, color=~type.pal(dat$type), opacity=1,fillOpacity=1, radius=500)
-}
+leaflet(dat3) %>%
+  addProviderTiles("OpenStreetMap") %>%
+  addCircles(lng = ~lon, lat = ~lat, color=~type.pal(dat3$type), opacity=1,fillOpacity=1, radius=500)
+
 
 ```
 
