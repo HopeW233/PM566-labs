@@ -206,6 +206,7 @@ met_stations[, n := 1:.N, by=STATE]
 met_location <- met_stations[n == minrecord, .(USAFID, STATE, lon, lat)]
 met_location
 ```
+
 ```{r}
 all_stations <- dat[, .(USAFID, lat, lon, STATE)][, .SD[1], by = "USAFID"]
 
@@ -213,6 +214,8 @@ all_stations <- dat[, .(USAFID, lat, lon, STATE)][, .SD[1], by = "USAFID"]
 met_temp <- merge(x = met_temp, y = all_stations, by = "USAFID",
   all.x = TRUE, all.y = FALSE
 )
+
+
 
 # Combining datasets and Mapping
 library(leaflet)
@@ -226,9 +229,13 @@ dat3 <- rbind(dat1,dat2)
 
 type.pal <- colorFactor(c('blue', 'purple', 'red'),
                        domain = as.factor(dat$type))
-leaflet(dat) %>%
+
+
+leaflet(dat3) %>%
   addProviderTiles("OpenStreetMap") %>%
-  addCircles(lng = ~lon, lat = ~lat, color=~type.pal(dat$type), opacity=1,fillOpacity=1, radius=500)
+  addCircles(lng = ~lon, lat = ~lat, color=~type.pal(dat3$type), opacity=1,fillOpacity=1, radius=500)
+
+
 ```
 
 Knit the doc and save it on GitHub.
