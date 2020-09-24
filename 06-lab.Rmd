@@ -48,6 +48,9 @@ Loading in reference transcription samples from https://www.mtsamples.com/
 ```{r, warning=FALSE, message=FALSE}
 library(readr)
 library(dplyr)
+library(tidyverse)
+library(tidytext)
+library(ggplot2)
 mt_samples <- read_csv("https://raw.githubusercontent.com/USCbiostats/data-science-data/master/00_mtsamples/mtsamples.csv")
 mt_samples <- mt_samples %>%
   select(description, medical_specialty, transcription)
@@ -62,10 +65,10 @@ We can use `count()` from `dplyr` to figure out how many different catagories do
 
 ```{r}
 mt_samples %>%
-  count(mt_samples$medical_specialty, sort = TRUE)
+  count(medical_specialty, sort = TRUE)
 ```
 
-- There are 40 different categories, 
+- There are 40 different categories, surgery has the most frequency.
 ---
 
 ## Question 2
@@ -74,7 +77,19 @@ mt_samples %>%
 - Count the number of times each token appears
 - Visualize the top 20 most frequent words
 
+```{r}
+library(forcats)
+mt_samples %>%
+  unnest_tokens(token, transcription) %>%
+  count(token, sort = TRUE) %>%
+  top_n(50, n) %>%
+  ggplot(aes(x = n, y = fct_reorder(token, n)))+
+  geom_col()
+```
+
 Explain what we see from this result. Does it makes sense? What insights (if any) do we get?
+
+- Basically there are some stop words and number on the top which should be removed.
 
 ---
 
@@ -85,11 +100,42 @@ Explain what we see from this result. Does it makes sense? What insights (if any
 
 What do we see know that we have removed stop words? Does it give us a better idea of what the text is about?
 
+```{r}
+number_words <- as.character(seq(0,100))
+
+mt_samples %>%
+  unnest_tokens(word, transcription) %>%
+  filter(!(word %in% tidytext::stop_words$word)) %>%
+  filter(!(word %in% number_words)) %>%
+  count(word, sort = TRUE) %>%
+  top_n(20, n) %>%
+  ggplot(aes(x = n, y = fct_reorder(word, n)))+
+  geom_col()
+```
+
+- After removing stop words and numbers, we see patient has the most frequency.
+
 ---
 
 # Question 4
 
 repeat question 2, but this time tokenize into bi-grams. how does the result change if you look at tri-grams?
+
+```{r}
+mt_samples %>%
+  unnest_ngrams(token, transcription, n = 2) %>%
+  count(token, sort = TRUE) %>%
+  top_n(20, n) %>%
+  ggplot(aes(x = n, y = fct_reorder(token, n)))+
+  geom_col()
+
+mt_samples %>%
+  unnest_ngrams(token, transcription, n = 3) %>%
+  count(token, sort = TRUE) %>%
+  top_n(20, n) %>%
+  ggplot(aes(x = n, y = fct_reorder(token, n)))+
+  geom_col()
+```
 
 ---
 
@@ -97,11 +143,53 @@ repeat question 2, but this time tokenize into bi-grams. how does the result cha
 
 Using the results you got from questions 4. Pick a word and count the words that appears after and before it.
 
+```{r}
+# pick history to look at
+mt_bigrams <- mt_samples %>%
+  unnest_ngrams(token, transcription, n = 2) %>%
+  separate(token, into = c("word1", "word2"), sep = " ")%>%
+  select(word1, word2) 
+
+mt_bigrams %>%
+  filter(word1 == "history") %>%
+  count(word2, sort = TRUE)
+
+mt_bigrams %>%
+  filter(word2 == "history") %>%
+  count(word1, sort = TRUE)
+
+mt_bigrams %>%
+  anti_join(tidytext::stop_words, by = c("word1" = "word")) %>%
+  anti_join(tidytext::stop_words, by = c("word2" = "word")) %>%
+  count(word1, word2, sort = TRUE)
+```
+
+- The data mostly collected medical, family, social and surgical history of patients. 
+
 ---
 
 # Question 6 
 
 Which words are most used in each of the specialties. you can use `group_by()` and `top_n()` from `dplyr` to have the calculations be done within each specialty. Remember to remove stopwords. How about the most 5 used words?
+
+```{r}
+mt_samples %>%
+  unnest_tokens(token, transcription) %>%
+  anti_join(tidytext::stop_words, by = c("token" = "word")) %>%
+  group_by(medical_specialty) %>%
+  count(token, sort = TRUE) %>%
+  top_n(1,n)
+
+mt_samples %>%
+  unnest_tokens(token, transcription) %>%
+  anti_join(tidytext::stop_words, by = c("token" = "word")) %>%
+  group_by(medical_specialty) %>%
+  count(token, sort = TRUE) %>%
+  top_n(5,n)
+```
+
+- Patient is the most used word in each medical specialty.
+- When we look at top 5 used words in each specialty, we could see patient, left, procedure, history are the most used words in its specialty.
 
 # Question 7 - extra
 
@@ -110,5 +198,21 @@ Find your own insight in the data:
 Ideas:
 
 - Interesting ngrams
-- See if certain words are used more in some specialties then others
+- See if certain words are used more in some specialties than others
 
+```{r}
+mt_bigrams_unitted <- mt_samples %>%
+  unnest_ngrams(token, transcription, n = 2) %>%
+  separate(token, into = c("word1", "word2"), sep = " ") %>%
+  anti_join(tidytext::stop_words, by = c("word1" = "word")) %>%
+  anti_join(tidytext::stop_words, by = c("word2" = "word")) %>%
+  unite(bigram, word1, word2, sep = " ")
+
+mt_bigrams_unitted %>%
+  count(medical_specialty, bigram) %>%
+  bind_tf_idf(bigram, medical_specialty, n) %>%
+  arrange(desc(tf_idf)) %>%
+  top_n(20,n)
+```
+
+- We could see coronary artery is the most relevant term under Cardiovascular / Pulmonary, and preoperative/postoperative diagnosis is the most relevant term under Surgery.
