@@ -147,10 +147,10 @@ Using the function `stringr::str_extract_all()` applied on `publications_txt`, c
 
 Write a regular expression that captures all such instances
 
-```{r univ-institute-regex, eval = FALSE}
+```{r univ-institute-regex, eval = TRUE}
 institution <- str_extract_all(
   publications_txt,
-  "[YOUR REGULAR EXPRESSION HERE]"
+  "University of\\s[[:alpha:]]+|[[:alpha:]]+\\sInstitute of\\s[[:alpha:]]+"
   ) 
 institution <- unlist(institution)
 table(institution)
@@ -163,12 +163,13 @@ Repeat the exercise and this time focus on schools and departments in the form o
 
 And tabulate the results
 
-```{r school-department, eval = FALSE}
+```{r school-department, eval = TRUE}
 schools_and_deps <- str_extract_all(
-  abstracts_txt,
-  "[YOUR REGULAR EXPRESSION HERE]"
+  publications_txt,
+  "School of\\s[[:alpha:]]+|Department of\\s[[:alpha:]]+"
   )
-table(schools_and_deps)
+
+table(unlist(schools_and_deps))
 ```
 
 ## Question 5: Form a database

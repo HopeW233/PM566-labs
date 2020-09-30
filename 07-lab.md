@@ -168,11 +168,41 @@ Write a regular expression that captures all such instances
 ``` r
 institution <- str_extract_all(
   publications_txt,
-  "[YOUR REGULAR EXPRESSION HERE]"
+  "University of\\s[[:alpha:]]+|[[:alpha:]]+\\sInstitute of\\s[[:alpha:]]+"
   ) 
 institution <- unlist(institution)
 table(institution)
 ```
+
+    ## institution
+    ##      Australian Institute of Tropical Massachusetts Institute of Technology 
+    ##                                     9                                     1 
+    ##   National Institute of Environmental    Prophylactic Institute of Southern 
+    ##                                     3                                     2 
+    ##                 University of Arizona              University of California 
+    ##                                     2                                     6 
+    ##                 University of Chicago                University of Colorado 
+    ##                                     1                                     1 
+    ##                   University of Hawai                  University of Hawaii 
+    ##                                    20                                    38 
+    ##                  University of Health                University of Illinois 
+    ##                                     1                                     1 
+    ##                    University of Iowa                University of Lausanne 
+    ##                                     4                                     1 
+    ##              University of Louisville                University of Nebraska 
+    ##                                     1                                     5 
+    ##                  University of Nevada                     University of New 
+    ##                                     1                                     2 
+    ##            University of Pennsylvania              University of Pittsburgh 
+    ##                                    18                                     5 
+    ##                 University of Science                   University of South 
+    ##                                    14                                     1 
+    ##                University of Southern                  University of Sydney 
+    ##                                     1                                     1 
+    ##                   University of Texas                     University of the 
+    ##                                     5                                     1 
+    ##                    University of Utah               University of Wisconsin 
+    ##                                     2                                     3
 
 Repeat the exercise and this time focus on schools and departments in
 the form of
@@ -184,11 +214,62 @@ And tabulate the results
 
 ``` r
 schools_and_deps <- str_extract_all(
-  abstracts_txt,
-  "[YOUR REGULAR EXPRESSION HERE]"
+  publications_txt,
+  "School of\\s[[:alpha:]]+|Department of\\s[[:alpha:]]+"
   )
-table(schools_and_deps)
+
+table(unlist(schools_and_deps))
 ```
+
+    ## 
+    ## Department of Anesthesiology        Department of Biology 
+    ##                            6                            3 
+    ##     Department of Cardiology           Department of Cell 
+    ##                            1                            4 
+    ##       Department of Clinical  Department of Communication 
+    ##                            2                            1 
+    ##  Department of Computational       Department of Critical 
+    ##                            1                            2 
+    ##        Department of Defense  Department of Environmental 
+    ##                            1                            1 
+    ##   Department of Epidemiology   Department of Experimental 
+    ##                            9                            1 
+    ##         Department of Family        Department of Genetic 
+    ##                            3                            1 
+    ##      Department of Geography     Department of Infectious 
+    ##                            2                            2 
+    ##    Department of Information       Department of Internal 
+    ##                            1                            6 
+    ##        Department of Medical       Department of Medicine 
+    ##                            3                           44 
+    ##   Department of Microbiology         Department of Native 
+    ##                            1                            2 
+    ##     Department of Nephrology      Department of Neurology 
+    ##                            5                            1 
+    ##      Department of Nutrition             Department of OB 
+    ##                            4                            5 
+    ##     Department of Obstetrics Department of Otolaryngology 
+    ##                            4                            4 
+    ##     Department of Pediatrics       Department of Physical 
+    ##                           13                            3 
+    ##     Department of Population     Department of Preventive 
+    ##                            1                            2 
+    ##     Department of Psychiatry     Department of Psychology 
+    ##                            4                            1 
+    ##   Department of Quantitative Department of Rehabilitation 
+    ##                            6                            1 
+    ##         Department of Social        Department of Surgery 
+    ##                            1                            6 
+    ##  Department of Translational       Department of Tropical 
+    ##                            1                            5 
+    ##           Department of Twin        Department of Urology 
+    ##                            2                            1 
+    ##       Department of Veterans           School of Medicine 
+    ##                            2                           87 
+    ##            School of Natural            School of Nursing 
+    ##                            1                            1 
+    ##             School of Public             School of Social 
+    ##                           20                            1
 
 ## Question 5: Form a database
 
