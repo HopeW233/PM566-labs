@@ -106,11 +106,12 @@ my_boot <- function(dat, stat, R, ncpus = 1L) {
   idx <- matrix(sample.int(n, n*R, TRUE), nrow=n, ncol=R)
  
   # Making the cluster using `ncpus`
-  # STEP 1: GOES HERE
+  # STEP 1: Make cluster
+  cl <- makePSOCKcluster(ncpus)
   # STEP 2: GOES HERE
-  
-    # STEP 3: THIS FUNCTION NEEDS TO BE REPLACES WITH parLapply
-  ans <- lapply(seq_len(R), function(i) {
+  clusterExport(cl, varlist = c("idx", "dat", "stat"), envir = environment())
+  # STEP 3: THIS FUNCTION NEEDS TO BE REPLACES WITH parLapply
+  ans <- parLapply(cl, seq_len(R), function(i) {
     stat(dat[idx[,i], , drop=FALSE])
   })
   
@@ -118,9 +119,8 @@ my_boot <- function(dat, stat, R, ncpus = 1L) {
   ans <- do.call(rbind, ans)
   
   # STEP 4: GOES HERE
-  
+  stopCluster(cl)
   ans
-  
 }
 ```
 
@@ -135,13 +135,19 @@ my_stat <- function(d) coef(lm(y ~ x, data=d))
 
 # DATA SIM
 set.seed(1)
-n <- 500; R <- 1e4
+n <- 500
+R <- 1e4
 
-x <- cbind(rnorm(n)); y <- x*5 + rnorm(n)
+x <- cbind(rnorm(n)) 
+y <- x*5 + rnorm(n)
 
 # Checking if we get something similar as lm
 ans0 <- confint(lm(y~x))
-ans1 <- my_boot(dat = data.frame(x, y), mi_stat, R = R, ncpus = 2L)
+ans1 <- my_boot(
+  dat = data.frame(x, y), 
+  stat = my_stat,
+  R = R, 
+  ncpus = 2L)
 
 # You should get something like this
 t(apply(ans1, 2, quantile, c(.025,.975)))
@@ -160,8 +166,8 @@ ans0
 <!-- end list -->
 
 ``` r
-system.time(my_boot(dat = data.frame(x, y), mi_stat, R = 4000, ncpus = 1L))
-system.time(my_boot(dat = data.frame(x, y), mi_stat, R = 4000, ncpus = 2L))
+system.time(my_boot(dat = data.frame(x, y), my_stat, R = 4000, ncpus = 1L))
+system.time(my_boot(dat = data.frame(x, y), my_stat, R = 4000, ncpus = 2L))
 ```
 
 ## Problem 4: Compile this markdown document using Rscript
