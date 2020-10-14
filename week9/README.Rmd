@@ -69,13 +69,13 @@ fun2 <- function(x) {
 }
 
 fun2alt <- function(x) {
-  # YOUR CODE HERE
+  x[cbind(max.col(t(x)), 1:ncol(x))]
 }
 
 # Benchmarking
 microbenchmark::microbenchmark(
-  fun2(),
-  fun2alt()
+  fun2(x),
+  fun2alt(x), unit = "relative"
 )
 ```
 
