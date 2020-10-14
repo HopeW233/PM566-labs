@@ -52,12 +52,24 @@ microbenchmark::microbenchmark(
   fun1(),
   fun1alt(), unit = "relative"
 )
+```
 
+    ## Unit: relative
+    ##       expr     min       lq     mean   median       uq       max neval
+    ##     fun1() 15.9625 21.12216 3.501158 22.18984 21.52099 0.2870826   100
+    ##  fun1alt()  1.0000  1.00000 1.000000  1.00000  1.00000 1.0000000   100
+
+``` r
 microbenchmark::microbenchmark(
   fun1(1000),
   fun1alt(1000), unit = "relative"
 )
 ```
+
+    ## Unit: relative
+    ##           expr      min       lq     mean   median       uq      max neval
+    ##     fun1(1000) 29.13643 28.89971 31.24769 28.82785 29.11649 35.84467   100
+    ##  fun1alt(1000)  1.00000  1.00000  1.00000  1.00000  1.00000  1.00000   100
 
 2.  Find the column max (hint: Checkout the function `max.col()`).
 
@@ -78,11 +90,15 @@ fun2alt <- function(x) {
 }
 
 # Benchmarking
-microbenchmark::microbenchmark(
+benchmark <- microbenchmark::microbenchmark(
   fun2(x),
   fun2alt(x), unit = "relative"
 )
+
+plot(benchmark)
 ```
+
+![](README_files/figure-gfm/p2-fun2-1.png)<!-- -->
 
 ## Problem 3: Parallelize everyhing
 
@@ -151,10 +167,24 @@ ans1 <- my_boot(
 
 # You should get something like this
 t(apply(ans1, 2, quantile, c(.025,.975)))
+```
+
+    ##                   2.5%      97.5%
+    ## (Intercept) -0.1386903 0.04856752
+    ## x            4.8685162 5.04351239
+
+``` r
 ##                   2.5%      97.5%
 ## (Intercept) -0.1372435 0.05074397
 ## x            4.8680977 5.04539763
 ans0
+```
+
+    ##                  2.5 %     97.5 %
+    ## (Intercept) -0.1379033 0.04797344
+    ## x            4.8650100 5.04883353
+
+``` r
 ##                  2.5 %     97.5 %
 ## (Intercept) -0.1379033 0.04797344
 ## x            4.8650100 5.04883353
@@ -167,8 +197,17 @@ ans0
 
 ``` r
 system.time(my_boot(dat = data.frame(x, y), my_stat, R = 4000, ncpus = 1L))
+```
+
+    ##    user  system elapsed 
+    ##    0.11    0.00    3.23
+
+``` r
 system.time(my_boot(dat = data.frame(x, y), my_stat, R = 4000, ncpus = 2L))
 ```
+
+    ##    user  system elapsed 
+    ##    0.10    0.01    1.78
 
 ## Problem 4: Compile this markdown document using Rscript
 

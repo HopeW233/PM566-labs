@@ -639,105 +639,131 @@ body {
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a>microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a>  <span class="kw">fun1</span>(),</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a>  <span class="kw">fun1alt</span>(), <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a>microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a>  <span class="kw">fun1</span>(<span class="dv">1000</span>),</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a>  <span class="kw">fun1alt</span>(<span class="dv">1000</span>), <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a>)</span></code></pre></div>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>)</span></code></pre></div>
+<pre><code>## Unit: relative
+##       expr     min       lq     mean   median       uq       max neval
+##     fun1() 15.9625 21.12216 3.501158 22.18984 21.52099 0.2870826   100
+##  fun1alt()  1.0000  1.00000 1.000000  1.00000  1.00000 1.0000000   100
+</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>  <span class="kw">fun1</span>(<span class="dv">1000</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>  <span class="kw">fun1alt</span>(<span class="dv">1000</span>), <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>)</span></code></pre></div>
+<pre><code>## Unit: relative
+##           expr      min       lq     mean   median       uq      max neval
+##     fun1(1000) 29.13643 28.89971 31.24769 28.82785 29.11649 35.84467   100
+##  fun1alt(1000)  1.00000  1.00000  1.00000  1.00000  1.00000  1.00000   100
+</code></pre>
 <ol start="2">
 <li>Find the column max (hint: Checkout the function <code>max.col()</code>).</li>
 </ol>
 <!-- end list -->
 
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co"># Data Generating Process (10 x 10,000 matrix)</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>x &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="fl">1e4</span>), <span class="dt">nrow=</span><span class="dv">10</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="co"># Find each column&#39;s max value</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>fun2 &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>  <span class="kw">apply</span>(x, <span class="dv">2</span>, max)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>}</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>fun2alt &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>  x[<span class="kw">cbind</span>(<span class="kw">max.col</span>(<span class="kw">t</span>(x)), <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(x))]</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>}</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a><span class="co"># Benchmarking</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>  <span class="kw">fun2</span>(x),</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a>  <span class="kw">fun2alt</span>(x), <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># Data Generating Process (10 x 10,000 matrix)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>x &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="fl">1e4</span>), <span class="dt">nrow=</span><span class="dv">10</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="co"># Find each column&#39;s max value</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>fun2 &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>  <span class="kw">apply</span>(x, <span class="dv">2</span>, max)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>}</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>fun2alt &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>  x[<span class="kw">cbind</span>(<span class="kw">max.col</span>(<span class="kw">t</span>(x)), <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(x))]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>}</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a><span class="co"># Benchmarking</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a>benchmark &lt;-<span class="st"> </span>microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a>  <span class="kw">fun2</span>(x),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a>  <span class="kw">fun2alt</span>(x), <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a><span class="kw">plot</span>(benchmark)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <h2 id="problem-3-parallelize-everyhing">Problem 3: Parallelize everyhing</h2>
 <p>We will now turn our attention to non-parametric <a href="https://en.wikipedia.org/wiki/Bootstrapping_(statistics)">bootstrapping</a>. Among its many uses, non-parametric bootstrapping allow us to obtain confidence intervals for parameter estimates without relying on parametric assumptions.</p>
 <p>The main assumption is that we can approximate many experiments by resampling observations from our original dataset, which reflects the population.</p>
 <p>This function implements the non-parametric bootstrap:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>my_boot &lt;-<span class="st"> </span><span class="cf">function</span>(dat, stat, R, <span class="dt">ncpus =</span> 1L) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>  </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>  <span class="co"># Getting the random indices</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>  n &lt;-<span class="st"> </span><span class="kw">nrow</span>(dat)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  idx &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">sample.int</span>(n, n<span class="op">*</span>R, <span class="ot">TRUE</span>), <span class="dt">nrow=</span>n, <span class="dt">ncol=</span>R)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a> </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>  <span class="co"># Making the cluster using `ncpus`</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>  <span class="co"># STEP 1: Make cluster</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>  cl &lt;-<span class="st"> </span><span class="kw">makePSOCKcluster</span>(ncpus)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>  <span class="co"># STEP 2: GOES HERE</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>  <span class="kw">clusterExport</span>(cl, <span class="dt">varlist =</span> <span class="kw">c</span>(<span class="st">&quot;idx&quot;</span>, <span class="st">&quot;dat&quot;</span>, <span class="st">&quot;stat&quot;</span>), <span class="dt">envir =</span> <span class="kw">environment</span>())</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>  <span class="co"># STEP 3: THIS FUNCTION NEEDS TO BE REPLACES WITH parLapply</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>  ans &lt;-<span class="st"> </span><span class="kw">parLapply</span>(cl, <span class="kw">seq_len</span>(R), <span class="cf">function</span>(i) {</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a>    <span class="kw">stat</span>(dat[idx[,i], , <span class="dt">drop=</span><span class="ot">FALSE</span>])</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>  })</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a>  </span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a>  <span class="co"># Coercing the list into a matrix</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a>  ans &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, ans)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true"></a>  </span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true"></a>  <span class="co"># STEP 4: GOES HERE</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true"></a>  <span class="kw">stopCluster</span>(cl)</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true"></a>  ans</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>my_boot &lt;-<span class="st"> </span><span class="cf">function</span>(dat, stat, R, <span class="dt">ncpus =</span> 1L) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>  </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>  <span class="co"># Getting the random indices</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>  n &lt;-<span class="st"> </span><span class="kw">nrow</span>(dat)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>  idx &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">sample.int</span>(n, n<span class="op">*</span>R, <span class="ot">TRUE</span>), <span class="dt">nrow=</span>n, <span class="dt">ncol=</span>R)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>  <span class="co"># Making the cluster using `ncpus`</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a>  <span class="co"># STEP 1: Make cluster</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>  cl &lt;-<span class="st"> </span><span class="kw">makePSOCKcluster</span>(ncpus)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>  <span class="co"># STEP 2: GOES HERE</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>  <span class="kw">clusterExport</span>(cl, <span class="dt">varlist =</span> <span class="kw">c</span>(<span class="st">&quot;idx&quot;</span>, <span class="st">&quot;dat&quot;</span>, <span class="st">&quot;stat&quot;</span>), <span class="dt">envir =</span> <span class="kw">environment</span>())</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>  <span class="co"># STEP 3: THIS FUNCTION NEEDS TO BE REPLACES WITH parLapply</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>  ans &lt;-<span class="st"> </span><span class="kw">parLapply</span>(cl, <span class="kw">seq_len</span>(R), <span class="cf">function</span>(i) {</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a>    <span class="kw">stat</span>(dat[idx[,i], , <span class="dt">drop=</span><span class="ot">FALSE</span>])</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a>  })</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a>  </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a>  <span class="co"># Coercing the list into a matrix</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a>  ans &lt;-<span class="st"> </span><span class="kw">do.call</span>(rbind, ans)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a>  </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a>  <span class="co"># STEP 4: GOES HERE</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true"></a>  <span class="kw">stopCluster</span>(cl)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true"></a>  ans</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true"></a>}</span></code></pre></div>
 <ol>
 <li>Use the previous pseudocode, and make it work with parallel. Here is just an example for you to try:</li>
 </ol>
 <!-- end list -->
 
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co"># Bootstrap of an OLS</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>my_stat &lt;-<span class="st"> </span><span class="cf">function</span>(d) <span class="kw">coef</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data=</span>d))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="co"># DATA SIM</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>n &lt;-<span class="st"> </span><span class="dv">500</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>R &lt;-<span class="st"> </span><span class="fl">1e4</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>x &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rnorm</span>(n)) </span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a>y &lt;-<span class="st"> </span>x<span class="op">*</span><span class="dv">5</span> <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a><span class="co"># Checking if we get something similar as lm</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a>ans0 &lt;-<span class="st"> </span><span class="kw">confint</span>(<span class="kw">lm</span>(y<span class="op">~</span>x))</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a>ans1 &lt;-<span class="st"> </span><span class="kw">my_boot</span>(</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a>  <span class="dt">dat =</span> <span class="kw">data.frame</span>(x, y), </span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a>  <span class="dt">stat =</span> my_stat,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a>  <span class="dt">R =</span> R, </span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a>  <span class="dt">ncpus =</span> 2L)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a><span class="co"># You should get something like this</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true"></a><span class="kw">t</span>(<span class="kw">apply</span>(ans1, <span class="dv">2</span>, quantile, <span class="kw">c</span>(.<span class="dv">025</span>,.<span class="dv">975</span>)))</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true"></a><span class="co">##                   2.5%      97.5%</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true"></a><span class="co">## (Intercept) -0.1372435 0.05074397</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true"></a><span class="co">## x            4.8680977 5.04539763</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true"></a>ans0</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true"></a><span class="co">##                  2.5 %     97.5 %</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true"></a><span class="co">## (Intercept) -0.1379033 0.04797344</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true"></a><span class="co">## x            4.8650100 5.04883353</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="co"># Bootstrap of an OLS</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>my_stat &lt;-<span class="st"> </span><span class="cf">function</span>(d) <span class="kw">coef</span>(<span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data=</span>d))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="co"># DATA SIM</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>n &lt;-<span class="st"> </span><span class="dv">500</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>R &lt;-<span class="st"> </span><span class="fl">1e4</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>x &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rnorm</span>(n)) </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a>y &lt;-<span class="st"> </span>x<span class="op">*</span><span class="dv">5</span> <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a><span class="co"># Checking if we get something similar as lm</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a>ans0 &lt;-<span class="st"> </span><span class="kw">confint</span>(<span class="kw">lm</span>(y<span class="op">~</span>x))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true"></a>ans1 &lt;-<span class="st"> </span><span class="kw">my_boot</span>(</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true"></a>  <span class="dt">dat =</span> <span class="kw">data.frame</span>(x, y), </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true"></a>  <span class="dt">stat =</span> my_stat,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true"></a>  <span class="dt">R =</span> R, </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true"></a>  <span class="dt">ncpus =</span> 2L)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true"></a><span class="co"># You should get something like this</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true"></a><span class="kw">t</span>(<span class="kw">apply</span>(ans1, <span class="dv">2</span>, quantile, <span class="kw">c</span>(.<span class="dv">025</span>,.<span class="dv">975</span>)))</span></code></pre></div>
+<pre><code>##                   2.5%      97.5%
+## (Intercept) -0.1386903 0.04856752
+## x            4.8685162 5.04351239
+</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="co">##                   2.5%      97.5%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="co">## (Intercept) -0.1372435 0.05074397</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="co">## x            4.8680977 5.04539763</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>ans0</span></code></pre></div>
+<pre><code>##                  2.5 %     97.5 %
+## (Intercept) -0.1379033 0.04797344
+## x            4.8650100 5.04883353
+</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="co">##                  2.5 %     97.5 %</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a><span class="co">## (Intercept) -0.1379033 0.04797344</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a><span class="co">## x            4.8650100 5.04883353</span></span></code></pre></div>
 <ol start="2">
 <li>Check whether your version actually goes faster than the non-parallel version:</li>
 </ol>
 <!-- end list -->
 
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">system.time</span>(<span class="kw">my_boot</span>(<span class="dt">dat =</span> <span class="kw">data.frame</span>(x, y), my_stat, <span class="dt">R =</span> <span class="dv">4000</span>, <span class="dt">ncpus =</span> 1L))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">system.time</span>(<span class="kw">my_boot</span>(<span class="dt">dat =</span> <span class="kw">data.frame</span>(x, y), my_stat, <span class="dt">R =</span> <span class="dv">4000</span>, <span class="dt">ncpus =</span> 2L))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="kw">system.time</span>(<span class="kw">my_boot</span>(<span class="dt">dat =</span> <span class="kw">data.frame</span>(x, y), my_stat, <span class="dt">R =</span> <span class="dv">4000</span>, <span class="dt">ncpus =</span> 1L))</span></code></pre></div>
+<pre><code>##    user  system elapsed 
+##    0.11    0.00    3.23
+</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">system.time</span>(<span class="kw">my_boot</span>(<span class="dt">dat =</span> <span class="kw">data.frame</span>(x, y), my_stat, <span class="dt">R =</span> <span class="dv">4000</span>, <span class="dt">ncpus =</span> 2L))</span></code></pre></div>
+<pre><code>##    user  system elapsed 
+##    0.10    0.01    1.78
+</code></pre>
 <h2 id="problem-4-compile-this-markdown-document-using-rscript">Problem 4: Compile this markdown document using Rscript</h2>
 <p>Once you have saved this Rmd file, try running the following command in your terminal:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="ex">Rscript</span> --vanilla -e <span class="st">&#39;rmarkdown::render(&quot;[full-path-to-your-Rmd-file.Rmd]&quot;)&#39;</span> <span class="kw">&amp;</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="ex">Rscript</span> --vanilla -e <span class="st">&#39;rmarkdown::render(&quot;[full-path-to-your-Rmd-file.Rmd]&quot;)&#39;</span> <span class="kw">&amp;</span></span></code></pre></div>
 <p>Where <code>[full-path-to-your-Rmd-file.Rmd]</code> should be replace with the full path to your Rmd file… :).</p>
 
 </body>
