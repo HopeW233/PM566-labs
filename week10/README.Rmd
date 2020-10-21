@@ -122,7 +122,7 @@ WHERE c.last_name = "DAVIS"
 Use `COUNT(*)` to count the number of rows in `rental`
 
 ```{sql, connection=con}
-SELECT COUNT(*) as count
+SELECT COUNT(*) AS count
 FROM rental
 ```
 
@@ -131,7 +131,7 @@ FROM rental
 Use `COUNT(*)` and `GROUP BY` to count the number of rentals for each `customer_id`
 
 ```{sql, connection=con}
-SELECT customer_id, COUNT(*) as count
+SELECT customer_id, COUNT(*) AS count
 FROM rental
 GROUP BY customer_id
 ```
@@ -140,10 +140,10 @@ GROUP BY customer_id
 Repeat the previous query and sort by the count in descending order
 
 ```{sql, connection=con}
-SELECT customer_id, COUNT(*) as count
+SELECT customer_id, COUNT(*) AS count
 FROM rental
 GROUP BY customer_id
-ORDER BY count desc
+ORDER BY count DESC
 ```
 
 ## Exercise 6.4
@@ -151,10 +151,10 @@ ORDER BY count desc
 Repeat the previous query but use `HAVING` to only keep the groups with 40 or more.
 
 ```{sql, connection=con}
-SELECT customer_id, COUNT(*) as count
+SELECT customer_id, COUNT(*) AS count
 FROM rental
 GROUP BY customer_id
-HAVING COUNT(*) >= 40 
+HAVING count >= 40 
 ORDER BY count DESC
 ```
 
@@ -163,11 +163,10 @@ ORDER BY count DESC
 The following query calculates a number of summary statistics for the payment table using `MAX`, `MIN`, `AVG` and `SUM`
 
 ```{sql, connection=con}
-SELECT 
-  MAX(amount) AS max_amount,
-  MIN(amount) AS min_amount,
-  AVG(amount) AS avg_amount,
-  SUM(amount) AS sum_amount
+SELECT MAX(amount) AS max_amount, 
+       MIN(amount) AS min_amount,
+       AVG(amount) AS avg_amount,
+       SUM(amount) AS sum_amount
 FROM payment
 ```
 
@@ -193,9 +192,11 @@ SELECT customer_id,
   MAX(amount) AS max_amount,
   MIN(amount) AS min_amount,
   AVG(amount) AS avg_amount,
-  SUM(amount) AS sum_amount
+  SUM(amount) AS sum_amount,
+  COUNT(*) AS count
 FROM payment
 GROUP BY customer_id
+HAVING count > 5
 ```
 # Cleanup
 

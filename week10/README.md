@@ -273,7 +273,7 @@ WHERE c.last_name = "DAVIS"
 Use `COUNT(*)` to count the number of rows in `rental`
 
 ``` sql
-SELECT COUNT(*) as count
+SELECT COUNT(*) AS count
 FROM rental
 ```
 
@@ -293,7 +293,7 @@ Use `COUNT(*)` and `GROUP BY` to count the number of rentals for each
 `customer_id`
 
 ``` sql
-SELECT customer_id, COUNT(*) as count
+SELECT customer_id, COUNT(*) AS count
 FROM rental
 GROUP BY customer_id
 ```
@@ -322,10 +322,10 @@ Displaying records 1 - 10
 Repeat the previous query and sort by the count in descending order
 
 ``` sql
-SELECT customer_id, COUNT(*) as count
+SELECT customer_id, COUNT(*) AS count
 FROM rental
 GROUP BY customer_id
-ORDER BY count desc
+ORDER BY count DESC
 ```
 
 <div class="knitsql-table">
@@ -353,10 +353,10 @@ Repeat the previous query but use `HAVING` to only keep the groups with
 40 or more.
 
 ``` sql
-SELECT customer_id, COUNT(*) as count
+SELECT customer_id, COUNT(*) AS count
 FROM rental
 GROUP BY customer_id
-HAVING COUNT(*) >= 40 
+HAVING count >= 40 
 ORDER BY count DESC
 ```
 
@@ -382,11 +382,10 @@ The following query calculates a number of summary statistics for the
 payment table using `MAX`, `MIN`, `AVG` and `SUM`
 
 ``` sql
-SELECT 
-  MAX(amount) AS max_amount,
-  MIN(amount) AS min_amount,
-  AVG(amount) AS avg_amount,
-  SUM(amount) AS sum_amount
+SELECT MAX(amount) AS max_amount, 
+       MIN(amount) AS min_amount,
+       AVG(amount) AS avg_amount,
+       SUM(amount) AS sum_amount
 FROM payment
 ```
 
@@ -443,25 +442,27 @@ SELECT customer_id,
   MAX(amount) AS max_amount,
   MIN(amount) AS min_amount,
   AVG(amount) AS avg_amount,
-  SUM(amount) AS sum_amount
+  SUM(amount) AS sum_amount,
+  COUNT(*) AS count
 FROM payment
 GROUP BY customer_id
+HAVING count > 5
 ```
 
 <div class="knitsql-table">
 
-| customer\_id | max\_amount | min\_amount | avg\_amount | sum\_amount |
-| -----------: | ----------: | ----------: | ----------: | ----------: |
-|            1 |        2.99 |        0.99 |    1.990000 |        3.98 |
-|            2 |        4.99 |        4.99 |    4.990000 |        4.99 |
-|            3 |        2.99 |        1.99 |    2.490000 |        4.98 |
-|            5 |        6.99 |        0.99 |    3.323333 |        9.97 |
-|            6 |        4.99 |        0.99 |    2.990000 |        8.97 |
-|            7 |        5.99 |        0.99 |    4.190000 |       20.95 |
-|            8 |        6.99 |        6.99 |    6.990000 |        6.99 |
-|            9 |        4.99 |        0.99 |    3.656667 |       10.97 |
-|           10 |        4.99 |        4.99 |    4.990000 |        4.99 |
-|           11 |        6.99 |        6.99 |    6.990000 |        6.99 |
+| customer\_id | max\_amount | min\_amount | avg\_amount | sum\_amount | count |
+| -----------: | ----------: | ----------: | ----------: | ----------: | ----: |
+|           19 |        9.99 |        0.99 |    4.490000 |       26.94 |     6 |
+|           53 |        9.99 |        0.99 |    4.490000 |       26.94 |     6 |
+|          109 |        7.99 |        0.99 |    3.990000 |       27.93 |     7 |
+|          161 |        5.99 |        0.99 |    2.990000 |       17.94 |     6 |
+|          197 |        3.99 |        0.99 |    2.615000 |       20.92 |     8 |
+|          207 |        6.99 |        0.99 |    2.990000 |       17.94 |     6 |
+|          239 |        7.99 |        2.99 |    5.656667 |       33.94 |     6 |
+|          245 |        8.99 |        0.99 |    4.823333 |       28.94 |     6 |
+|          251 |        4.99 |        1.99 |    3.323333 |       19.94 |     6 |
+|          269 |        6.99 |        0.99 |    3.156667 |       18.94 |     6 |
 
 Displaying records 1 - 10
 
